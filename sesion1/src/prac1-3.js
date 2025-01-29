@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
 
-if ( WEBGL.isWebGL2Available() ) {
- 
-}
-
+/*if ( WEBGL.isWebGL2Available() ) {
+    const nuevoDiv = document.createElement('div');
+    
+    nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
+    document.body.appendChild(nuevoDiv);
+}*/
 
 
 
@@ -27,12 +29,14 @@ scene.add( box );
 
 renderer.render( scene, camera );
 
+
+
+
   function render(time) {
-    time *= 0.001; 
-
-    box.rotation.x = time;
-    box.rotation.y = time;
-
+    box.rotation.y += Math.PI * 0.5 / 180; 
+    box.rotation.z = 0;
+    
+    
 
     renderer.render(scene, camera);
 
