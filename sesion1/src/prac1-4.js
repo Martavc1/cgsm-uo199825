@@ -40,7 +40,7 @@ cubo.position.x = -200;
 cubo.position.y = 0;
 cubo.position.z = 0;
 cilindro.position.x = 0;
-cilindro.position.y = -0;
+cilindro.position.y = 0;
 cilindro.position.z = 0;
 esfera.position.x = 200;
 escena.add(camara);

@@ -17,7 +17,7 @@ var geometriaCubo = new THREE.BoxGeometry(70,50,100);
 var geometriaCono = new THREE.ConeGeometry(40,40,80); 
  
 const materialCubo = new THREE.MeshBasicMaterial({ color: 0xff0000});
-const materialCono = new THREE.MeshBasicMaterial({ color: 0x0000ff});
+const materialCono = new THREE.MeshBasicMaterial({ color: 0xff0000});
  
 
 var cubo = new THREE.Mesh(geometriaCubo, materialCubo);
