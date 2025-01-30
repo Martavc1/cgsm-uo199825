@@ -2,64 +2,44 @@ import * as THREE from 'three';
 import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
 
 if ( !WEBGL.isWebGL2Available() ) {
-    const nuevoDiv = document.createElement('div');
-    
-    nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
-    document.body.appendChild(nuevoDiv);
+	const nuevoDiv = document.createElement('div');
+	
+	nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
+	document.body.appendChild(nuevoDiv);
 }
 
-
-var scene = new THREE.Scene;
+var escena = new THREE.Scene;
 const renderer = new THREE.WebGLRenderer( {antialias: true} );
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+var geometriaEsfera = new THREE.SphereGeometry(50,50,100);
 
-//Create a PointLight and turn on shadows for the light
-const light = new THREE.PointLight( 0xffffff, 1, 100 );
-light.position.set( 0, 10, 4 );
-light.castShadow = true; // default false
-scene.add( light );
-
-//Set up shadow properties for the light
-light.shadow.mapSize.width = 512; // default
-light.shadow.mapSize.height = 512; // default
-light.shadow.camera.near = 0.5; // default
-light.shadow.camera.far = 500; // default
-
-const mapUrl = "../textures/moon.gif";   // The file used as texture
+const mapUrl = "../textures/nube.gif";   // The file used as texture
 const textureLoader = new THREE.TextureLoader( );  // The object used to load textures
-const map = textureLoader.load( mapUrl );
-const materialEsfera = new THREE.MeshPhongMaterial( { map: map } );
+const atmosphereMap = textureLoader.load( mapUrl );
 
-//Create a sphere that cast shadows (but does not receive them)
-const sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
-const sphereMaterial = new THREE.MeshPhongMaterial( { map: map } );
-const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-sphere.castShadow = true; //default is false
-sphere.receiveShadow = false; //default
-scene.add( sphere );
+var materialEsfera = new THREE.MeshLambertMaterial( { color: 0xFFFFFF, map: atmosphereMap, transparent: true } );
 
-//Create a plane that receives shadows (but does not cast them)
-const planeGeometry = new THREE.PlaneGeometry( 20, 20, 32, 32 );
-const planeMaterial = new THREE.MeshPhongMaterial( { map: map } );
-const plane = new THREE.Mesh( planeGeometry, planeMaterial );
-plane.receiveShadow = true;
-scene.add( plane );
-
-//Create a helper for the shadow camera (optional)
-const helper = new THREE.CameraHelper( light.shadow.camera );
-scene.add( helper );
+var esfera = new THREE.Mesh(geometriaEsfera, materialEsfera);
+escena.add(esfera);
 
 const camara = new THREE.PerspectiveCamera ( 45, window.innerWidth / window.innerHeight, 10, 400 );
-camara.position.set( 0, 0, 400 );
-scene.add(camara);
+camara.position.set( 10, 0, 400 );
+escena.add(camara);
+
+const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
+light.position.set( 700, 100, 500 );
+
+escena.add( light );
+
+
+
+
 
 function renderizar(){
-	renderer.render(scene, camara);
+	renderer.render(escena, camara);
 	requestAnimationFrame(renderizar);
 }
 renderizar();
