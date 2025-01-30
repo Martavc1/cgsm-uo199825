@@ -13,8 +13,8 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 
-var geometriaCubo = new THREE.BoxGeometry(70,50,100);
-var geometriaCono = new THREE.ConeGeometry(40,40,80); 
+var geometriaCubo = new THREE.BoxGeometry(70,50,130);
+var geometriaCono = new THREE.ConeGeometry(55,45,100); 
  
 const materialCubo = new THREE.MeshBasicMaterial({ color: 0xff0000});
 const materialCono = new THREE.MeshBasicMaterial({ color: 0xff0000});
@@ -28,13 +28,13 @@ escena.add(cubo);
 escena.add(cono); 
 
 const camara = new THREE.PerspectiveCamera ( 55, window.innerWidth / window.innerHeight, 10, 400 );
-camara.position.set( 0, 0, 400 );
+camara.position.set( 100, 0, 400 );
 
 
 cubo.position.x = 0;
 cubo.position.y = 0;
 cubo.position.z = 0;
-cono.position.x = 0;
+cono.position.x = -10;
 cono.position.y = 48;
 cono.position.z = 0; 
 escena.add(camara);
