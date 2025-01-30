@@ -19,11 +19,15 @@ var geometriaCuboCasa = new THREE.BoxGeometry(70,50,100);
 var geometriaConoCasa = new THREE.ConeGeometry(55,45,100);
  
 const materialCuboCasa = new THREE.MeshBasicMaterial({ color: 0xff0000});
-const materialConoCasa = new THREE.MeshBasicMaterial({ color: 0xff0000});
- 
+const materialConoCasa = new THREE.MeshLambertMaterial({ color: 0xff0000});
+
+
+const directionalLightCono = new THREE.DirectionalLight( 0xff0000, 5 );
+escena.add( directionalLightCono );
 
 var cuboCasa = new THREE.Mesh(geometriaCuboCasa, materialCuboCasa);
 var conoCasa = new THREE.Mesh(geometriaConoCasa, materialConoCasa); 
+
 
 
 escena.add(cuboCasa);
@@ -51,6 +55,7 @@ var geometriaCilindro = new THREE.CylinderGeometry(40,40,60);
 var geometriaEsfera = new THREE.SphereGeometry(50,50,100);
 
 const materialEsfera = new THREE.MeshBasicMaterial({ color: 0x179740} );
+
 const materialCubo = new THREE.MeshBasicMaterial({ color: 0xff0000});
 const materialCilindro = new THREE.MeshBasicMaterial({ color: 0x0000ff});
  
