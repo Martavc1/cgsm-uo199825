@@ -20,7 +20,7 @@ escena.add(camara);
 
 
 
-var geometriaAtmosfera = new THREE.SphereGeometry(120,120,150);
+var geometriaAtmosfera = new THREE.SphereGeometry(160,120,150);
 
 const mapUrlAtmosfera = "../textures/nube.gif";   // The file used as texture
 const textureLoaderAtmosfera = new THREE.TextureLoader( );  // The object used to load textures
@@ -41,7 +41,7 @@ var tierra = new THREE.Mesh(geometriaTierra, materialTierra);
 escena.add(tierra);
 
 
-
+ 
 // Moon
 const moonMapUrlMoon = '../textures/moon_1024.jpg';
 const moonMap = textureLoader.load( moonMapUrlMoon, ( loaded ) => { renderer.render( escena, camara ); } );
@@ -59,7 +59,7 @@ moonTierraGroup.add(tierra);
 moonTierraGroup.add(moon);
 escena.add(moonTierraGroup);
 moonTierraGroup.rotation.y += 0.0089;   
-const clock = new THREE.Clock( );
+ /*
 const delta = clock.getDelta( ); // Elapsed time in seconds
 
 // UPDATE THE SCENE ACCORDING TO THE ELAPSED TIME
@@ -67,7 +67,7 @@ const delta = clock.getDelta( ); // Elapsed time in seconds
 const rotation = ( delta * Math.PI * 2 ) / 24;
 tierra.rotation.y += rotation* 4.95;;
 atmostera.rotation.y += rotation * 4.95;
-
+*/
 
 
 // Move the Moon away from the coordinate origin (the Earth)
@@ -94,9 +94,10 @@ light.position.set( 20, 100, 500 );
 escena.add( light );
 
 
+ 
+
+const clock = new THREE.Clock( );
 animate( );
-
-
 
 function render(time) {
  
@@ -104,23 +105,21 @@ function render(time) {
     moonTierraGroup.rotation.y += 0.0089;  
  
     renderer.render(escena, camara);
-	animate( );
+
 
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
 
-  
+ 
   function animate( ) {
 
-	const clock = new THREE.Clock( );
     const delta = clock.getDelta( ); // Elapsed time in seconds
 
     // UPDATE THE SCENE ACCORDING TO THE ELAPSED TIME
-
-	const rotation = ( delta * Math.PI * 2 ) / 24;
-    tierra.rotation.y += rotation * 4.95;
-    atmostera.rotation.y += rotation * 4.95;
+    const rotation = ( delta * Math.PI * 2 ) / 24;
+    tierra.rotation.y += rotation;
+    atmostera.rotation.y += rotation * 0.07;
 
     // Render the scene
     renderer.render( escena, camara );
