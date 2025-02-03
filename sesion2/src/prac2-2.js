@@ -14,7 +14,7 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 
-var geometriaEsfera = new THREE.SphereGeometry(50,50,100);
+var geometriaEsfera = new THREE.SphereGeometry(80,80,200);
 
 const mapUrl = "../textures/moon.gif";   // The file used as texture
 const textureLoader = new THREE.TextureLoader( );  // The object used to load textures
@@ -25,12 +25,12 @@ const materialEsfera = new THREE.MeshPhongMaterial( { map: map } );
 var esfera = new THREE.Mesh(geometriaEsfera, materialEsfera);
 escena.add(esfera);
 
-const camara = new THREE.PerspectiveCamera ( 45, window.innerWidth / window.innerHeight, 10, 400 );
+const camara = new THREE.PerspectiveCamera ( 55, window.innerWidth / window.innerHeight, 10, 400 );
 camara.position.set( 10, 0, 400 );
 escena.add(camara);
 
 const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
-light.position.set( 700, 100, 500 );
+light.position.set( 20, 100, 500 );
 
 escena.add( light );
 
