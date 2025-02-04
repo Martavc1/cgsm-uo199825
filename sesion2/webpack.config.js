@@ -23,5 +23,15 @@ module.exports = {
     performance: {
         maxAssetSize: 1000000,
         maxEntrypointSize: 1000000
-    }
+    },
+    module: {
+        rules: [
+          {
+            test: /\.glsl$/,
+            use: {
+              loader: 'webpack-glsl-loader'
+            }
+          }
+        ]
+      }
 };

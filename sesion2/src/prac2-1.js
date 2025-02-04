@@ -9,7 +9,6 @@ if ( !WEBGL.isWebGL2Available() ) {
 }
 
 
-
 const scene = new THREE.Scene();
 
 const renderer = new THREE.WebGLRenderer( {antialias: true} );
@@ -19,10 +18,8 @@ document.body.appendChild( renderer.domElement );
 const camera = new THREE.PerspectiveCamera ( 45, window.innerWidth / window.innerHeight, 1, 4000 );
 camera.position.set( 0, 0, 300 );
 
-
 const geometry = new THREE.BoxGeometry( 100, 100, 100 );
  
-
 const mapUrl = "../textures/crate.gif";   // The file used as texture
 const textureLoader = new THREE.TextureLoader( );  // The object used to load textures
 const map = textureLoader.load( mapUrl );
@@ -34,9 +31,6 @@ box.rotation.set( Math.PI / 5, Math.PI / 5, 0 );
 scene.add( box );
 
 renderer.render( scene, camera );
-
-
-
 
   function render(time) {
     box.rotation.y -= Math.PI * 0.5 / 180; 
