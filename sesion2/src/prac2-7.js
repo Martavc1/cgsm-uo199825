@@ -19,8 +19,7 @@ camara.position.set( 10, 0, 400 );
 escena.add(camara);
 
 
-
-var geometriaAtmosfera = new THREE.SphereGeometry(160,120,150);
+var geometriaAtmosfera = new THREE.SphereGeometry(50,50,80);
 
 const mapUrlAtmosfera = "../textures/nube.gif";   // The file used as texture
 const textureLoaderAtmosfera = new THREE.TextureLoader( );  // The object used to load textures
@@ -32,7 +31,7 @@ var atmostera = new THREE.Mesh(geometriaAtmosfera, materialAtmosfera);
 escena.add(atmostera);
 
 // Tierra
-var geometriaTierra = new THREE.SphereGeometry(50,50,100);
+var geometriaTierra = new THREE.SphereGeometry(30,30,60);
 const mapUrl = "../textures/moon.gif";   // The file used as texture
 const textureLoader = new THREE.TextureLoader( );  // The object used to load textures
 const map = textureLoader.load( mapUrl );

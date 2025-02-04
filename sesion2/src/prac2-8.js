@@ -20,7 +20,7 @@ escena.add(camara);
 
 
 
-var geometriaAtmosfera = new THREE.SphereGeometry(160,120,150);
+var geometriaAtmosfera = new THREE.SphereGeometry(50,50,80);
 
 const mapUrlAtmosfera = "../textures/nube.gif";   // The file used as texture
 const textureLoaderAtmosfera = new THREE.TextureLoader( );  // The object used to load textures
