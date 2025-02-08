@@ -1,70 +1,97 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import Stats from 'three/examples/jsm/libs/stats.module'
-import { GUI } from 'dat.gui'
+import * as THREE from 'three';
+import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
 
-const scene = new THREE.Scene()
-scene.add(new THREE.AxesHelper(5))
-
-const light = new THREE.PointLight(0xffffff, 1000)
-light.position.set(0, 5, 10)
-scene.add(light)
-
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-)
-camera.position.z = 1
-
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
-
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true
-
-const planeGeometry = new THREE.PlaneGeometry(3.6, 1.8)
-
-const material = new THREE.MeshPhongMaterial()
-
-const texture = new THREE.TextureLoader().load('../textures/brick.jpg')
-material.map = texture
-
-const bumpTexture = new THREE.TextureLoader().load('../textures/brick-map.jpg')
-material.bumpMap = bumpTexture
-material.bumpScale = 0.015
-
-const plane = new THREE.Mesh(planeGeometry, material)
-scene.add(plane)
-
-window.addEventListener('resize', onWindowResize, false)
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    render()
+if ( !WEBGL.isWebGL2Available() ) {
+    const nuevoDiv = document.createElement('div');
+    
+    nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
+    document.body.appendChild(nuevoDiv);
 }
 
-const stats = new Stats()
-document.body.appendChild(stats.dom)
 
-const gui = new GUI()
-gui.add(material, 'bumpScale', 0, 1, 0.01)
+const scene = new THREE.Scene();
 
-function animate() {
-    requestAnimationFrame(animate)
+const renderer = new THREE.WebGLRenderer( {antialias: true} );
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
 
-    controls.update()
+const camera = new THREE.PerspectiveCamera ( 45, window.innerWidth / window.innerHeight, 1, 4000 );
+camera.position.set( 0, 0, 300 );
+
+const video = document.getElementById( 'video' );
+
+var canvas2 = document.getElementById("canvas");
+
+
+const g2d = canvas2.getContext( '2d' );
+
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+
+
+
+g2d.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+ 
+
+
+
+//const video = document.getElementById( 'video' );
+
+const image = document.createElement( 'canvas' );
+image.width = 480;  // Video width
+image.height = 204; // Video height
+const imageContext = image.getContext( '2d' );
+imageContext.fillStyle = '#000000';
+imageContext.fillRect( 0, 0, image.width - 1, image.height - 1 );
+const texture = new THREE.Texture( image );
+
+const material = new THREE.MeshBasicMaterial( { map: texture } );
+const wall = new THREE.Mesh( new THREE.PlaneGeometry( image.width, image.height, 4, 4 ), material );
+///
+
+const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
+light.position.set( 20, 100, 500 );
+
+scene.add( light );
+scene.add(wall); 
+
+const light2 = new THREE.PointLight( 0xffffff, 20, 50,0 );
+light2.position.set( 10, 10, 40 );
+
+
+
+scene.add( light );
+
+renderer.render( scene, camera );
+
+  function render() {
+ 
+    
+    renderer.render(scene, camera);
+
+    requestAnimationFrame(render);
+  }
+  
+  requestAnimationFrame(render);
+
+  function animate() {
+    //requestAnimationFrame(animate)
+
+    if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+ 
+		imageContext.drawImage( video, 0, 0 );
+		if ( texture ) 
+			texture.needsUpdate = true;
+	}
 
     render()
+ 
+ 
 
-    stats.update()
-}
+    //stats.update()
 
-function render() {
-    renderer.render(scene, camera)
+
 }
 
 animate()
