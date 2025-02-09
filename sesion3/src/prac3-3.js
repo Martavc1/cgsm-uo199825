@@ -1,5 +1,7 @@
 import * as THREE from 'three'
-import { GUI } from 'dat.gui'
+import { GUI } from 'dat.gui';
+
+import Stats from 'three/examples/jsm/libs/stats.module';
 
 
     const textureLoader = new THREE.TextureLoader( );  
@@ -10,6 +12,11 @@ import { GUI } from 'dat.gui'
     // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1.1, 4000);
 
+
+	const stats = new Stats( );
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
+document.body.appendChild( stats.domElement );
     
     const renderer = new THREE.WebGLRenderer( {antialias: true} );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -83,6 +90,7 @@ import { GUI } from 'dat.gui'
     function render() { 
         cubo1.rotation.y += 0.001;
         cubo2.rotation.y -= 0.001;
+		stats.update( );
         
         requestAnimationFrame(render);
         renderer.render(scene, camera);

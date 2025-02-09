@@ -20,48 +20,34 @@ camera.position.set( 0, 0, 300 );
 
 const video = document.getElementById( 'video' );
 
-var canvas2 = document.getElementById("canvas");
-
-
-const g2d = canvas2.getContext( '2d' );
-
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-
-
-
-g2d.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
- 
-
-
-
-//const video = document.getElementById( 'video' );
-
 const image = document.createElement( 'canvas' );
 image.width = 480;  // Video width
 image.height = 204; // Video height
 const imageContext = image.getContext( '2d' );
+
+ 
 imageContext.fillStyle = '#000000';
 imageContext.fillRect( 0, 0, image.width - 1, image.height - 1 );
 const texture = new THREE.Texture( image );
 
+
 const material = new THREE.MeshBasicMaterial( { map: texture } );
 const wall = new THREE.Mesh( new THREE.PlaneGeometry( image.width, image.height, 4, 4 ), material );
-///
+wall.position.set( -50, 10, 50 );
+imageContext.drawImage( video, 0, 0 );
 
-const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
+
+
+const light = new THREE.PointLight( 0xffffff, 100, 1000,0 );
 light.position.set( 20, 100, 500 );
 
 scene.add( light );
 scene.add(wall); 
 
 const light2 = new THREE.PointLight( 0xffffff, 20, 50,0 );
+const geometry = new THREE.BoxGeometry( 60, 60, 60 );
 light2.position.set( 10, 10, 40 );
 
-
-
-scene.add( light );
 
 renderer.render( scene, camera );
 
@@ -86,11 +72,6 @@ renderer.render( scene, camera );
 	}
 
     render()
- 
- 
-
-    //stats.update()
-
 
 }
 
