@@ -23,7 +23,7 @@ const texture = new THREE.Texture( image );
 
 const material = new THREE.MeshBasicMaterial( { map: texture } );
 const wall = new THREE.Mesh( new THREE.PlaneGeometry( image.width, image.height, 4, 4 ), material );
-//wall.position.set( 50, 10, 50 );
+wall.position.set( 0, 0, 0 );
 wall.rotation.set( Math.PI / 5, Math.PI / 5, 0 );
 
 //const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
@@ -50,10 +50,3 @@ renderer.render( scene, camera );
   }
   requestAnimationFrame(render);
 
-
-
-
-
-
-
-	requestAnimationFrame(render);
