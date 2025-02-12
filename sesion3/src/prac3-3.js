@@ -36,12 +36,11 @@ box1.position.x = -12;
 //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
-var box2 = createMesh(new THREE.BoxGeometry(10, 10, 10),  "brick-map.jpg");
+var box2 = createMesh(geometry, mapBrick);
 box2.rotation.y = 0.5;
 box2.position.x = 12;
-scene.add(box2); 
+scene.add(box2);  
 
-    // position and point the camera to the center of the scene
 camera.position.x = 0;
 camera.position.y = 15;
 camera.position.z = 28;
@@ -64,18 +63,17 @@ gui.add(controls, "bumpScale", -4, 4).onChange(controls.updateBump);
  
 render();
 
-function createMesh(geom, bump) { 
+function createMesh(geom, mapBrick) { 
 
-    var texturem = "../textures/brick.jpg";
-    const texture = textureLoader.load( texturem );
+    //var texturem = "../textures/brick.jpg";
+    //const texture = textureLoader.load( mapUrlBrick );
     
     var mat = new THREE.MeshPhongMaterial();
-    mat.map = texture;
+    mat.map = mapBrick;
 
-    var texturem = "../textures/" + bump;           
-    const bump2 = textureLoader.load( texturem );
-    mat.bumpMap = bump2;
-    mat.bumpScale = 0.2; 
+    var texturem = "../textures/brick-map.jpg";           
+    const bump = textureLoader.load( texturem );
+    mat.bumpMap = bump;
         
     var mesh = new THREE.Mesh(geom, mat);
     return mesh;
