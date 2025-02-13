@@ -32,8 +32,12 @@ const mapUrlBrick = "../textures/brick.jpg";   // The file used as texture
 const mapBrick = textureLoader.load( mapUrlBrick ); 
 const regularFaceMaterial = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
+const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+const mapPlay = textureLoader.load( mapUrlPlay ); 
+const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } );
+
 const materialsBox1 = [
-    specialFaceMaterial,
+    playFaceMaterial,
     regularFaceMaterial,
     regularFaceMaterial,
     regularFaceMaterial,
@@ -144,6 +148,12 @@ document.body.addEventListener( 'mousemove', ( event ) => {
 function createMeshBox2( mapBrick,  maptexturaBasica) { 
 
     const matCaraDiferente = new THREE.MeshPhongMaterial( { map: maptexturaBasica } );
+
+
+
+    const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+const mapPlay = textureLoader.load( mapUrlPlay ); 
+const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } );
     
     const mat = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
@@ -156,7 +166,7 @@ function createMeshBox2( mapBrick,  maptexturaBasica) {
 
     const materialsBox2 = [
         mat,
-        matCaraDiferente,
+        playFaceMaterial,
         mat,
         mat,
         mat,
@@ -211,17 +221,38 @@ document.body.addEventListener( 'keydown', ( event ) => {
     if ( event.keyCode === spaceKeyCode && intersectedObject ) {
 
         // TODO:
-         
+        const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+        const mapPlay = textureLoader.load( mapUrlPlay ); 
+        const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } ); 
+
+        const mapUrlNoPlay = "../textures/sonidoDesactivado.png";   // The file used as texture 
+        const mapNoPlay = textureLoader.load( mapUrlNoPlay ); 
+        const noPlayFaceMaterial = new THREE.MeshPhongMaterial( { map: mapNoPlay } ); 
+
         if(intersectedObject.name === 'box1'){
-            if ( sound.isPlaying === true )
+            if ( sound.isPlaying === true ){
                 sound.pause();
-            else
+                box1.material[ 0 ] = noPlayFaceMaterial;
+                box1.material.needsUpdate = true;
+                }
+            else{
+                box1.material[ 0 ] = playFaceMaterial;
+                box1.material.needsUpdate = true;
                 sound.play();
+            }
+                
         }else if(intersectedObject.name === 'box2'){
-            if ( soundDog.isPlaying === true )
+            if ( soundDog.isPlaying === true ){
                 soundDog.pause();
-            else
+                box2.material[ 1 ] = noPlayFaceMaterial;
+                box2.material.needsUpdate = true;
+            }
+            else{
                 soundDog.play();
+                box2.material[ 1 ] = playFaceMaterial;
+                box2.material.needsUpdate = true;
+            }
+                
         }
    
     }
