@@ -33,12 +33,14 @@ const geometry = new THREE.BoxGeometry( 10, 10, 10 );
 const box1 = new THREE.Mesh( geometry, materialBrick );
 box1.rotation.y = 0.5;
 box1.position.x = -12;
+box1.position.y = -4;
 //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
 var box2 = createMesh(geometry, mapBrick);
 box2.rotation.y = 0.5;
 box2.position.x = 12;
+box2.position.y = -4;
 scene.add(box2);  
 
 camera.position.x = 0;

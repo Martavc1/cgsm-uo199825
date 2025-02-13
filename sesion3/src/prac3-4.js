@@ -41,22 +41,6 @@ const materialsBox1 = [
     regularFaceMaterial,
 ];
 
-const mapUrltexturaMapa = "../textures/mapaTopo.png";   // The file used as texture 
-const maptexturaMapa = textureLoader.load( mapUrltexturaMapa ); 
-const specialFaceMaterialMapa = new THREE.MeshPhongMaterial( { map: maptexturaMapa } );
-
-const mapUrlBrickMap = "../textures/brick-map.jpg";   // The file used as texture 
-const mapBrickMap = textureLoader.load( mapUrlBrickMap ); 
-const regularFaceMaterialMap = new THREE.MeshPhongMaterial( { map: mapBrickMap } );
-
-const materialsBox2 = [
-    regularFaceMaterial,
-    specialFaceMaterial,
-    regularFaceMaterial,
-    regularFaceMaterial,
-    regularFaceMaterial,
-    regularFaceMaterial,
-];
 const geometry = new THREE.BoxGeometry( 10, 10, 10 );
     
 const box1 = new THREE.Mesh( geometry, materialsBox1 );
@@ -64,8 +48,14 @@ box1.position.x = -140;
   //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
-//var box2 = createMesh(geometry, mapBrick, materialsBox2);
-const box2 = new THREE.Mesh( geometry, materialsBox2 );
+/*const mapUrltexturaMapa = "../textures/mapaTopo.png";  
+const maptexturaMapa = textureLoader.load( mapUrltexturaMapa );  
+
+const mapUrlBrickMap = "../textures/brick-map.jpg";    
+const mapBrickMap = textureLoader.load( mapUrlBrickMap ); */
+
+var box2 = createMeshBox2( mapBrick, maptexturaBasica);
+//const box2 = new THREE.Mesh( geometry, materialsBox2 );
 box2.position.x = 140;
 scene.add(box2); 
 
@@ -75,9 +65,14 @@ camera.position.z = 28;
 //camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
-const light = new THREE.PointLight( 0xffffff, 3, 1000,0 );
-light.position.set( 0, 100, 50 );
+const light = new THREE.PointLight( 0xffffff, 3.5, 1000,0 );
+light.position.set( 0, 500, 0 );
 scene.add(light);
+
+/*
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xf0f0f0,1);
+hemiLight.position.set( 0, 500, 0 );
+scene.add( hemiLight );*/
 
 const controls2 = new FirstPersonControls( camera, renderer.domElement );
 controls2.movementSpeed = 70;
@@ -88,8 +83,13 @@ controls2.lookVertical = false;
 var controls = new function () {
     this.bumpScale = 0.5;
     
-    this.updateBump = function (e) {          
-        box2.material.bumpScale = e; 
+    this.updateBump = function (e) {       
+        box2.material[0].bumpScale = e; 
+        box2.material[1].bumpScale = e; 
+        box2.material[2].bumpScale = e; 
+        box2.material[3].bumpScale = e; 
+        box2.material[4].bumpScale = e; 
+        box2.material[5].bumpScale = e; 
     
     }
 };
@@ -98,23 +98,33 @@ var gui = new GUI( );
 gui.add(controls, "bumpScale", -4, 4).onChange(controls.updateBump); 
 
 
-function createMesh(geom, mapBrick, materialsBox2) { 
+function createMeshBox2( mapBrick,  maptexturaBasica) { 
 
-    //var texturem = "../textures/brick.jpg";
-    //const texture = textureLoader.load( mapUrlBrick ); 
-
-        var mat = new THREE.MeshPhongMaterial({ map: mapBrick });
-        //mat.map = mapBrick;
+    const matCaraDiferente = new THREE.MeshPhongMaterial( { map: maptexturaBasica } );
     
-        var texturem = "../textures/brick-map.jpg";           
-        const bump = textureLoader.load( texturem );
-        mat.bumpMap = bump;
-        //mat.bumpScale = 0.2; 
-            
-        var mesh = new THREE.Mesh(geom, mat);
+    const mat = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
-        //var mesh = new THREE.Mesh( geometry, materialsBox2 );
-        return mesh;
+    var texturem = "../textures/brick-map.jpg";           
+    const bump = textureLoader.load( texturem );
+
+    //mat.bumpScale = 0.2; 
+    var texturem2 = "../textures/mapaTopo.png";           
+    const bump2 = textureLoader.load( texturem2 );
+
+    const materialsBox2 = [
+        mat,
+        matCaraDiferente,
+        mat,
+        mat,
+        mat,
+        mat,
+    ];
+            
+    mat.bumpMap = bump;
+    matCaraDiferente.bumpMap = bump2;
+
+    var mesh = new THREE.Mesh( geometry, materialsBox2 );
+    return mesh;
 }
  
 const clock = new THREE.Clock( );
