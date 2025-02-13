@@ -1,5 +1,11 @@
 import * as THREE from 'three';
+import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
 
+if ( !WEBGL.isWebGL2Available() ) {
+    const nuevoDiv = document.createElement('div');
+    nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
+    document.body.appendChild(nuevoDiv);
+}
 
 const scene = new THREE.Scene();
 
@@ -36,8 +42,8 @@ scene.add(wall);
 renderer.render( scene, camera );
 
   function render(time) {
-    wall.rotation.y -= Math.PI * 0.5 / 180;  
-    
+    wall.rotation.y -= Math.PI * 0.5 / 180;   
+    //wall.rotation.x -= Math.PI * 0.5 / 180;  
     renderer.render(scene, camera);
 
 	if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
