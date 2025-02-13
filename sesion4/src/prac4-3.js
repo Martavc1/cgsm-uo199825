@@ -1,91 +1,228 @@
 import * as THREE from 'three';
-import WEBGL from 'three/examples/jsm/capabilities/WebGL.js'; 
+import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { GUI } from 'dat.gui';
-import Stats from 'three/examples/jsm/libs/stats.module';
+ 
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
+
 
 if ( !WEBGL.isWebGL2Available() ) {
     const nuevoDiv = document.createElement('div');
-    
     nuevoDiv.textContent = WEBGL.getWebGL2ErrorMessage().textContent;
     document.body.appendChild(nuevoDiv);
 }
 
-const textureLoader = new THREE.TextureLoader( );  
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1.1, 4000);
-
-
-const stats = new Stats( );
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.top = '0px';
-document.body.appendChild( stats.domElement );
-    
+var camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1.1, 4000);
+ 
 const renderer = new THREE.WebGLRenderer( {antialias: true} );
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+const textureLoader = new THREE.TextureLoader( );  
+ 
+const helper = new THREE.GridHelper( 800, 40, 0x444444, 0x444444 );
+helper.position.y = 0.1;
+scene.add(helper); 
+ 
+const mapUrltexturaBasica = "../textures/texturaBasica.png";   // The file used as texture 
+const maptexturaBasica = textureLoader.load( mapUrltexturaBasica ); 
+const specialFaceMaterial = new THREE.MeshPhongMaterial( { map: maptexturaBasica } );
+
 const mapUrlBrick = "../textures/brick.jpg";   // The file used as texture 
-const mapBrick = textureLoader.load( mapUrlBrick );
-const materialBrick = new THREE.MeshPhongMaterial( { map: mapBrick } );
+const mapBrick = textureLoader.load( mapUrlBrick ); 
+const regularFaceMaterial = new THREE.MeshPhongMaterial( { map: mapBrick } );
+
+const materialsBox1 = [
+    specialFaceMaterial,
+    regularFaceMaterial,
+    regularFaceMaterial,
+    regularFaceMaterial,
+    regularFaceMaterial,
+    regularFaceMaterial,
+];
 
 const geometry = new THREE.BoxGeometry( 10, 10, 10 );
     
-const box1 = new THREE.Mesh( geometry, materialBrick );
-box1.rotation.y = 0.5;
-box1.position.x = -12;
-box1.position.y = -4;
-//box1.position.set( -50, 10, 50 );
+const box1 = new THREE.Mesh( geometry, materialsBox1 );
+box1.position.x = -140;
+box1.name = "box1";
+
+const listener = new THREE.AudioListener();
+camera.add( listener );
+
+const audioLoader = new THREE.AudioLoader();
+const sound = new THREE.PositionalAudio( listener );
+audioLoader.load( '../audio/BadCatMaste.ogg', ( buffer ) => {
+    sound.setBuffer( buffer );
+    sound.setRefDistance( 20 );
+    sound.setLoop( true );
+    sound.setRolloffFactor( 1 );
+    sound.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box1.add( sound );
+  //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
-var box2 = createMesh(geometry, mapBrick);
-box2.rotation.y = 0.5;
-box2.position.x = 12;
-box2.position.y = -4;
-scene.add(box2);  
+/*const mapUrltexturaMapa = "../textures/mapaTopo.png";  
+const maptexturaMapa = textureLoader.load( mapUrltexturaMapa );  
+
+const mapUrlBrickMap = "../textures/brick-map.jpg";    
+const mapBrickMap = textureLoader.load( mapUrlBrickMap ); */
+
+var box2 = createMeshBox2( mapBrick, maptexturaBasica);
+box2.name = 'box2';
+//const box2 = new THREE.Mesh( geometry, materialsBox2 );
+box2.position.x = 140;
+
+const listenerDog = new THREE.AudioListener();
+camera.add( listenerDog );
+
+const audioLoaderDog = new THREE.AudioLoader();
+const soundDog = new THREE.PositionalAudio( listenerDog );
+
+ 
+audioLoaderDog.load( '../audio/dog.ogg', ( buffer ) => {
+    soundDog.setBuffer( buffer );
+    soundDog.setRefDistance( 20 );
+    soundDog.setLoop( true );
+    soundDog.setRolloffFactor( 1 );
+    soundDog.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box2.add( soundDog );
+scene.add(box2); 
 
 camera.position.x = 0;
 camera.position.y = 15;
 camera.position.z = 28;
-camera.lookAt(new THREE.Vector3(0, 0, 0));
+//camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-const light = new THREE.PointLight( 0xffffff, 3, 1000,0 );
-light.position.set( 0, 100, 50 );
+
+const light = new THREE.PointLight( 0xffffff, 3.5, 1000,0 );
+light.position.set( 0, 500, 0 );
 scene.add(light);
+
+/*
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xf0f0f0,1);
+hemiLight.position.set( 0, 500, 0 );
+scene.add( hemiLight );*/
+
+const controls2 = new FirstPersonControls( camera, renderer.domElement );
+controls2.movementSpeed = 70;
+controls2.lookSpeed = 0.05;
+controls2.noFly = false;
+controls2.lookVertical = false;
 
 var controls = new function () {
     this.bumpScale = 0.5;
-
-    this.updateBump = function (e) {              
-        box2.material.bumpScale = e; 
+    
+    this.updateBump = function (e) {       
+        box2.material[0].bumpScale = e; 
+        box2.material[1].bumpScale = e; 
+        box2.material[2].bumpScale = e; 
+        box2.material[3].bumpScale = e; 
+        box2.material[4].bumpScale = e; 
+        box2.material[5].bumpScale = e; 
+    
     }
 };
 
 var gui = new GUI( );
 gui.add(controls, "bumpScale", -4, 4).onChange(controls.updateBump); 
- 
-render();
 
-function createMesh(geom, mapBrick) { 
 
-    //var texturem = "../textures/brick.jpg";
-    //const texture = textureLoader.load( mapUrlBrick );
+
+const rayCaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let intersectedObject = null;
+
+document.body.addEventListener( 'mousemove', ( event ) => {
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}, false );
+
+
+function createMeshBox2( mapBrick,  maptexturaBasica) { 
+
+    const matCaraDiferente = new THREE.MeshPhongMaterial( { map: maptexturaBasica } );
     
-    var mat = new THREE.MeshPhongMaterial();
-    mat.map = mapBrick;
+    const mat = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
     var texturem = "../textures/brick-map.jpg";           
     const bump = textureLoader.load( texturem );
+
+    //mat.bumpScale = 0.2; 
+    var texturem2 = "../textures/mapaTopo.png";           
+    const bump2 = textureLoader.load( texturem2 );
+
+    const materialsBox2 = [
+        mat,
+        matCaraDiferente,
+        mat,
+        mat,
+        mat,
+        mat,
+    ];
+            
     mat.bumpMap = bump;
-        
-    var mesh = new THREE.Mesh(geom, mat);
+    matCaraDiferente.bumpMap = bump2;
+
+    var mesh = new THREE.Mesh( geometry, materialsBox2 );
     return mesh;
 }
+ 
+const clock = new THREE.Clock( );
+
+render();
 
 function render() { 
-    box1.rotation.y += 0.001;
-    box2.rotation.y -= 0.001;
-	stats.update( );
         
     requestAnimationFrame(render);
     renderer.render(scene, camera);
+
+    const delta = clock.getDelta();
+    controls2.update( delta );
+
+
+    rayCaster.setFromCamera( mouse, camera );
+
+// Look for all the intersected objects
+const intersects = rayCaster.intersectObjects( scene.children );
+if ( intersects.length > 0 ) {
+
+    // Sorted by Z (close to the camera)
+    if ( intersectedObject != intersects[ 0 ].object ) {
+
+        intersectedObject = intersects[ 0 ].object;
+        console.log( 'New intersected object: ' + intersectedObject.name );
+    }
+} else {
+
+    intersectedObject = null;
 }
+}
+
+
+document.body.addEventListener( 'keydown', ( event ) => {
+
+    // Space key code
+    const spaceKeyCode = 32;
+
+    // Space pressed and intersected object
+    if ( event.keyCode === spaceKeyCode && intersectedObject ) {
+
+        // TODO:
+         
+        if(intersectedObject.name === 'box1'){
+            if ( sound.isPlaying === true )
+                sound.pause();
+            else
+                sound.play();
+        }else if(intersectedObject.name === 'box2'){
+            if ( soundDog.isPlaying === true )
+                soundDog.pause();
+            else
+                soundDog.play();
+        }
+   
+    }
+}, false );
