@@ -45,6 +45,21 @@ const geometry = new THREE.BoxGeometry( 10, 10, 10 );
     
 const box1 = new THREE.Mesh( geometry, materialsBox1 );
 box1.position.x = -140;
+
+
+const listener = new THREE.AudioListener();
+camera.add( listener );
+
+const audioLoader = new THREE.AudioLoader();
+const sound = new THREE.PositionalAudio( listener );
+audioLoader.load( '../audio/BadCatMaste.ogg', ( buffer ) => {
+    sound.setBuffer( buffer );
+    sound.setRefDistance( 20 );
+    sound.setLoop( true );
+    sound.setRolloffFactor( 1 );
+    sound.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box1.add( sound );
   //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
@@ -57,6 +72,22 @@ const mapBrickMap = textureLoader.load( mapUrlBrickMap ); */
 var box2 = createMeshBox2( mapBrick, maptexturaBasica);
 //const box2 = new THREE.Mesh( geometry, materialsBox2 );
 box2.position.x = 140;
+
+const listenerDog = new THREE.AudioListener();
+camera.add( listenerDog );
+
+const audioLoaderDog = new THREE.AudioLoader();
+const soundDog = new THREE.PositionalAudio( listenerDog );
+
+ 
+audioLoaderDog.load( '../audio/dog.ogg', ( buffer ) => {
+    soundDog.setBuffer( buffer );
+    soundDog.setRefDistance( 20 );
+    soundDog.setLoop( true );
+    soundDog.setRolloffFactor( 1 );
+    soundDog.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box2.add( soundDog );
 scene.add(box2); 
 
 camera.position.x = 0;
@@ -97,19 +128,7 @@ var controls = new function () {
 var gui = new GUI( );
 gui.add(controls, "bumpScale", -4, 4).onChange(controls.updateBump); 
 
-const listener = new THREE.AudioListener();
-camera.add( listener );
 
-const audioLoader = new THREE.AudioLoader();
-const sound = new THREE.PositionalAudio( listener );
-audioLoader.load( ruta_al_fichero, ( buffer ) => {
-    sound.setBuffer( buffer );
-    sound.setRefDistance( 20 );
-    sound.setLoop( true );
-    sound.setRolloffFactor( 1 );
-    //sound.play(); // Modern browsers do not allow sound to start without user interaction
-});
-box2.add( sound );
 
 
 function createMeshBox2( mapBrick,  maptexturaBasica) { 
