@@ -32,8 +32,12 @@ const mapUrlBrick = "../textures/brick.jpg";   // The file used as texture
 const mapBrick = textureLoader.load( mapUrlBrick ); 
 const regularFaceMaterial = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
+const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+const mapPlay = textureLoader.load( mapUrlPlay ); 
+const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } );
+
 const materialsBox1 = [
-    specialFaceMaterial,
+    playFaceMaterial,
     regularFaceMaterial,
     regularFaceMaterial,
     regularFaceMaterial,
@@ -45,6 +49,21 @@ const geometry = new THREE.BoxGeometry( 10, 10, 10 );
     
 const box1 = new THREE.Mesh( geometry, materialsBox1 );
 box1.position.x = -140;
+box1.name = "box1";
+
+const listener = new THREE.AudioListener();
+camera.add( listener );
+
+const audioLoader = new THREE.AudioLoader();
+const sound = new THREE.PositionalAudio( listener );
+audioLoader.load( '../audio/BadCatMaste.ogg', ( buffer ) => {
+    sound.setBuffer( buffer );
+    sound.setRefDistance( 20 );
+    sound.setLoop( true );
+    sound.setRolloffFactor( 1 );
+    sound.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box1.add( sound );
   //box1.position.set( -50, 10, 50 );
 scene.add(box1);
 
@@ -55,8 +74,25 @@ const mapUrlBrickMap = "../textures/brick-map.jpg";
 const mapBrickMap = textureLoader.load( mapUrlBrickMap ); */
 
 var box2 = createMeshBox2( mapBrick, maptexturaBasica);
+box2.name = 'box2';
 //const box2 = new THREE.Mesh( geometry, materialsBox2 );
 box2.position.x = 140;
+
+const listenerDog = new THREE.AudioListener();
+camera.add( listenerDog );
+
+const audioLoaderDog = new THREE.AudioLoader();
+const soundDog = new THREE.PositionalAudio( listenerDog );
+
+ 
+audioLoaderDog.load( '../audio/dog.ogg', ( buffer ) => {
+    soundDog.setBuffer( buffer );
+    soundDog.setRefDistance( 20 );
+    soundDog.setLoop( true );
+    soundDog.setRolloffFactor( 1 );
+    soundDog.play(); // Modern browsers do not allow sound to start without user interaction
+});
+box2.add( soundDog );
 scene.add(box2); 
 
 camera.position.x = 0;
@@ -98,9 +134,26 @@ var gui = new GUI( );
 gui.add(controls, "bumpScale", -4, 4).onChange(controls.updateBump); 
 
 
+
+const rayCaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let intersectedObject = null;
+
+document.body.addEventListener( 'mousemove', ( event ) => {
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}, false );
+
+
 function createMeshBox2( mapBrick,  maptexturaBasica) { 
 
     const matCaraDiferente = new THREE.MeshPhongMaterial( { map: maptexturaBasica } );
+
+
+
+    const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+const mapPlay = textureLoader.load( mapUrlPlay ); 
+const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } );
     
     const mat = new THREE.MeshPhongMaterial( { map: mapBrick } );
 
@@ -113,7 +166,7 @@ function createMeshBox2( mapBrick,  maptexturaBasica) {
 
     const materialsBox2 = [
         mat,
-        matCaraDiferente,
+        playFaceMaterial,
         mat,
         mat,
         mat,
@@ -129,6 +182,30 @@ function createMeshBox2( mapBrick,  maptexturaBasica) {
  
 const clock = new THREE.Clock( );
 
+
+
+const movements = [
+    new THREE.Vector3(0, 0, 1),   // Forward
+    new THREE.Vector3(1, 0, 1),   // Forward-left
+    new THREE.Vector3(1, 0, 0),   // Left
+    new THREE.Vector3(1, 0, -1),  // Backward-left
+    new THREE.Vector3(0, 0, -1),  // Backward
+    new THREE.Vector3(-1, 0, -1), // Backward-right
+    new THREE.Vector3(-1, 0, 0),  // Right
+    new THREE.Vector3(-1, 0, 1)   // Forward-right
+];
+
+
+let collisions;
+const distance = 20; // Maximum distance of a collision
+
+rayCaster.set( camera.position, direction );
+collisions = rayCaster.intersectObjects( scene.children );
+if ( collisions.length > 0 && collisions[0].distance <= distance ) {
+
+   alert("dffdfd");
+}
+
 render();
 
 function render() { 
@@ -138,4 +215,69 @@ function render() {
 
     const delta = clock.getDelta();
     controls2.update( delta );
+
+
+    rayCaster.setFromCamera( mouse, camera );
+
+// Look for all the intersected objects
+const intersects = rayCaster.intersectObjects( scene.children );
+if ( intersects.length > 0 ) {
+
+    // Sorted by Z (close to the camera)
+    if ( intersectedObject != intersects[ 0 ].object ) {
+
+        intersectedObject = intersects[ 0 ].object;
+        console.log( 'New intersected object: ' + intersectedObject.name );
+    }
+} else {
+
+    intersectedObject = null;
 }
+}
+
+
+document.body.addEventListener( 'keydown', ( event ) => {
+
+    // Space key code
+    const spaceKeyCode = 32;
+
+    // Space pressed and intersected object
+    if ( event.keyCode === spaceKeyCode && intersectedObject ) {
+
+        // TODO:
+        const mapUrlPlay = "../textures/sonidoActivado.png";   // The file used as texture 
+        const mapPlay = textureLoader.load( mapUrlPlay ); 
+        const playFaceMaterial = new THREE.MeshPhongMaterial( { map: mapPlay } ); 
+
+        const mapUrlNoPlay = "../textures/sonidoDesactivado.png";   // The file used as texture 
+        const mapNoPlay = textureLoader.load( mapUrlNoPlay ); 
+        const noPlayFaceMaterial = new THREE.MeshPhongMaterial( { map: mapNoPlay } ); 
+
+        if(intersectedObject.name === 'box1'){
+            if ( sound.isPlaying === true ){
+                sound.pause();
+                box1.material[ 0 ] = noPlayFaceMaterial;
+                box1.material.needsUpdate = true;
+                }
+            else{
+                box1.material[ 0 ] = playFaceMaterial;
+                box1.material.needsUpdate = true;
+                sound.play();
+            }
+                
+        }else if(intersectedObject.name === 'box2'){
+            if ( soundDog.isPlaying === true ){
+                soundDog.pause();
+                box2.material[ 1 ] = noPlayFaceMaterial;
+                box2.material.needsUpdate = true;
+            }
+            else{
+                soundDog.play();
+                box2.material[ 1 ] = playFaceMaterial;
+                box2.material.needsUpdate = true;
+            }
+                
+        }
+   
+    }
+}, false );
