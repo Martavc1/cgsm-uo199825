@@ -96,8 +96,8 @@ box2.add( soundDog );
 scene.add(box2); 
 
 camera.position.x = 0;
-camera.position.y = 15;
-camera.position.z = 28;
+camera.position.y = 5;
+camera.position.z = 0;
 //camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 
@@ -110,11 +110,11 @@ const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xf0f0f0,1);
 hemiLight.position.set( 0, 500, 0 );
 scene.add( hemiLight );*/
 
-const controls2 = new FirstPersonControls( camera, renderer.domElement );
-controls2.movementSpeed = 70;
-controls2.lookSpeed = 0.05;
-controls2.noFly = false;
-controls2.lookVertical = false;
+const controlsFirstPersonControls = new FirstPersonControls( camera, renderer.domElement );
+controlsFirstPersonControls.movementSpeed = 70;
+controlsFirstPersonControls.lookSpeed = 0.05;
+controlsFirstPersonControls.noFly = false;
+controlsFirstPersonControls.lookVertical = false;
 
 var controls = new function () {
     this.bumpScale = 0.5;
@@ -195,16 +195,9 @@ const movements = [
     new THREE.Vector3(-1, 0, 1)   // Forward-right
 ];
 
+var isColision = false;
 
-let collisions;
-const distance = 20; // Maximum distance of a collision
 
-rayCaster.set( camera.position, direction );
-collisions = rayCaster.intersectObjects( scene.children );
-if ( collisions.length > 0 && collisions[0].distance <= distance ) {
-
-   alert("dffdfd");
-}
 
 render();
 
@@ -214,26 +207,54 @@ function render() {
     renderer.render(scene, camera);
 
     const delta = clock.getDelta();
-    controls2.update( delta );
+    controlsFirstPersonControls.update( delta );
 
 
     rayCaster.setFromCamera( mouse, camera );
 
-// Look for all the intersected objects
-const intersects = rayCaster.intersectObjects( scene.children );
-if ( intersects.length > 0 ) {
+    // Look for all the intersected objects
+    const intersects = rayCaster.intersectObjects( scene.children );
+    if ( intersects.length > 0 ) {
 
-    // Sorted by Z (close to the camera)
-    if ( intersectedObject != intersects[ 0 ].object ) {
+        // Sorted by Z (close to the camera)
+        if ( intersectedObject != intersects[ 0 ].object ) {
 
-        intersectedObject = intersects[ 0 ].object;
-        console.log( 'New intersected object: ' + intersectedObject.name );
+            intersectedObject = intersects[ 0 ].object;
+            //console.log( 'New intersected object: ' + intersectedObject.name );
+        }
+    } else {
+
+        intersectedObject = null;
     }
-} else {
 
-    intersectedObject = null;
+
+
+
+    let collisions;
+    const distance = 20; // Maximum distance of a collision
+    for(var i=0;i<movements.length;i++){
+        rayCaster.set( camera.position, movements[i] );      
+   
+        collisions = rayCaster.intersectObjects( scene.children );
+        
+        if ( collisions.length > 0 && collisions[0].distance <= distance ) {         
+            isColision = true;
+            
+        }
+    }
+
+    console.log( 'isColision: ' + isColision);
+    controlsFirstPersonControls.update( delta );
+if ( isColision ) {
+    console.log( 'delta: ' + delta);
+    controlsFirstPersonControls.update( -delta );
+    isColision = false;
 }
+
 }
+
+
+
 
 
 document.body.addEventListener( 'keydown', ( event ) => {
