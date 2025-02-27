@@ -99,6 +99,7 @@ navigator.mediaDevices.getUserMedia( constraints )
         }
     }, false );
 
+    startButton.disabled = true;
     callButton.disabled = false;
 
 
@@ -175,6 +176,7 @@ localPeerConnection.createOffer( offerOptions ).then( gotLocalDescription );
 
 
     hangupButton.disabled = false;
+    callButton.disabled = true;
   }
 
   function gotLocalIceCandidate( event ){
@@ -229,7 +231,12 @@ function gotRemoteIceCandidate( event ){
 }
   
   function hangup( ) {
+   
+    remotePeerConnection.createOffer( offerOptions ).then( gotLocalDescription );
+    remotePeerConnection.close(); 
 
-    alert("hangup");
+    startButton.disabled = true;
+    callButton.disabled = false;
+    hangupButton.disabled = true;
   }
   
