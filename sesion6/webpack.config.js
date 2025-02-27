@@ -2,7 +2,7 @@ module.exports = {
     mode: "development",
     entry: {
         "prac6-1": "./src/prac6-1.js",
-        "prac56-2": "./src/prac6-2.js",
+        "prac6-2": "./src/prac6-2.js",
         "prac6-3": "./src/prac6-3.js",
         "prac6-4": "./src/prac6-4.js"
       },

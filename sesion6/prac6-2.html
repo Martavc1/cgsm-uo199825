@@ -1,18 +1,25 @@
-
 <!DOCTYPE html>
+
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Ejercicio 2</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 1</title>
+    <link rel="stylesheet" type="text/css" href="prac6-1.css">
+</head>
+<body>
+    <script type="module" defer src="dist/prac6-2.js">
+    <!-- Content of the page -->
+</script>
+<div id="container">
+<video id="video" width="480"  height = "204" autoplay="true">   
 
-    <script src="dist/prac6-2.js" type="module"></script>
-  </head>
 
-  <body>
-    
-    <video id="video" style="display:none" autoplay="true">
-       
-  </video>
-  <canvas id="2d" width="0" height="0"></canvas>
-  </body>
+</video>
+</div>
+
+<canvas id="photo-canvas" style="display:none"></canvas>
+<a href="#" id="capture" download="capture.png" target="_blank">Capturar</a>
+</body>
 </html>

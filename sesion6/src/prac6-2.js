@@ -1,6 +1,8 @@
 import * as THREE from 'three';
-import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
+import WEBGL from 'three/examples/jsm/capabilities/WebGL.js'; 
 import dashjs  from './dash.all.min.js';
+import adapter from 'webrtc-adapter';
+
 
 if ( !WEBGL.isWebGL2Available() ) {
     const nuevoDiv = document.createElement('div');
@@ -8,57 +10,78 @@ if ( !WEBGL.isWebGL2Available() ) {
     document.body.appendChild(nuevoDiv);
 }
 
-const scene = new THREE.Scene();
-
-const renderer = new THREE.WebGLRenderer( {antialias: true} );
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-const camera = new THREE.PerspectiveCamera ( 65, window.innerWidth / window.innerHeight, 1, 4000 );
-camera.position.set( 0, 0, 300 );
-
-const video = document.getElementById( 'video' );
 
 
-const url = "../counter.mpd";
-const player = dashjs.MediaPlayer().create();
-player.initialize(video, url, true); 
+const video = document.querySelector( 'video' );
+const constraints = {
+    audio: false,
+    video: { width: { exact: 640 }, height: { exact: 480 } }
+};
 
-const image = document.createElement( 'canvas' );
-image.width = 480;  // Video width
-image.height = 204; // Video height
-const imageContext = image.getContext( '2d' );
-imageContext.fillStyle = '#000000';
-imageContext.fillRect( 0, 0, image.width - 1, image.height - 1 );
-const texture = new THREE.Texture( image );
+navigator.mediaDevices.getUserMedia( constraints )
+    // Called when we get the requested streams
+    .then( ( stream ) => {
 
+        // Video tracks (usually only one)
+        const videoTracks = stream.getVideoTracks( );
+        console.log( 'Stream characteristics: ', constraints );
+        console.log( 'Using device: ' + videoTracks[0].label );
 
-const material = new THREE.MeshBasicMaterial( { map: texture } );
-const wall = new THREE.Mesh( new THREE.PlaneGeometry( image.width, image.height, 4, 4 ), material );
-wall.position.set( 10, 50, 0 );
-wall.rotation.set( Math.PI / 5, Math.PI / 5, 0 );
+        // End of stream handler
+        stream.onended = () => {
 
-//const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
-//light.position.set( 20, 100, 500 );
-//scene.add( light );
+            console.log( 'End of stream' );
+        };
 
-scene.add(wall); 
+        // Bind the stream to the html video element
+        video.srcObject = stream;
+})
+    // Called in case of error
+    .catch( ( error ) => {
 
+        if ( error.name === 'ConstraintNotSatisfiedError' ) {
 
-renderer.render( scene, camera );
+            console.error( 'The resolution ' + constraints.video.width.exact + 'x' +
+                          constraints.video.width.exact + ' px is not supported by the camera.' );
+        } else if ( error.name === 'PermissionDeniedError' ) {
 
-  function render(time) {
-    wall.rotation.y -= Math.PI * 0.5 / 180;   
-    //wall.rotation.x -= Math.PI * 0.5 / 180;  
-    renderer.render(scene, camera);
+            console.error( 'The user has not allowed the access to the camera and the microphone.' );
+        }
+        console.error( ' Error in getUserMedia: ' + error.name, error );
+});
 
-	if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+let streaming = false;
+const width = 320;
+let height = 0;  // Computed based on the width
 
-		imageContext.drawImage( video, 0, 0 );
-		if ( texture ) texture.needsUpdate = true;
-	}
+video.addEventListener( 'canplay', ( event ) => {
 
-    requestAnimationFrame(render);
-  }
-  requestAnimationFrame(render);
+    if ( !streaming ) {  // To prevent re-entry
 
+        height = video.videoHeight / ( video.videoWidth / width );
+        video.width = width;
+        video.height = height;
+        canvas.width = width;
+        canvas.height = height;
+        streaming = true;
+    }
+}, false );
+
+const canvas = document.querySelector( 'canvas' );          // Select by element type
+const captureButton = document.getElementById( 'capture' ); // Select by id
+
+captureButton.addEventListener( 'click', ( event ) => {
+
+    takepicture( );
+}, false );
+
+function takepicture( ) {
+
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext( '2d' ).drawImage( video, 0, 0, width, height );
+
+  // Start downloading (thanks to the 'download' attribute of the link)
+  const dataURL = canvas.toDataURL( 'image/png' );
+  captureButton.href = dataURL;
+}
