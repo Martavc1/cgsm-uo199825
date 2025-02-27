@@ -1,6 +1,4 @@
-import * as THREE from 'three';
-import WEBGL from 'three/examples/jsm/capabilities/WebGL.js'; 
-import dashjs  from './dash.all.min.js';
+import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';  
 import adapter from 'webrtc-adapter';
 
 

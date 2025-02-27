@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import WEBGL from 'three/examples/jsm/capabilities/WebGL.js';
-import dashjs  from './dash.all.min.js';
+
 
 if ( !WEBGL.isWebGL2Available() ) {
     const nuevoDiv = document.createElement('div');

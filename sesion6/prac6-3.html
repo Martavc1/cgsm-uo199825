@@ -5,15 +5,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio 1</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Ejercicio 3</title>
+    <link rel="stylesheet" type="text/css" href="./src/css/prac6-3.css">
 </head>
 <body>
     <script type="module" defer src="dist/prac6-3.js">
     <!-- Content of the page -->
 </script>
+<div id="container">
+<video id="localVideo" width="480"  height = "204" autoplay="true">   </video>
 
-<video id="player" width="480"  height = "204">   
-</video>
+<video id="remoteVideo" width="480"  height = "204" autoplay="true"> </video>
+
+</div>
+<div>
+
+    <button id="startButton"  > Iniciar </button>
+    <button id="callButton"  > LLamar  </button>
+    <button id="hangupButton"  > Colgar </button>
+
+</div>
+<canvas id="photo-canvas" style="display:none"></canvas>
+<canvas id="photo-canvas" style="display:none"></canvas> 
 </body>
 </html>
