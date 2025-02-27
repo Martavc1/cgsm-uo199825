@@ -56,6 +56,7 @@ renderer.render( scene, camera );
   }
   requestAnimationFrame(render);
 
+
   
 const constraints = {
   audio: false,
@@ -95,7 +96,7 @@ navigator.mediaDevices.getUserMedia( constraints )
 });
 
 let streaming = false;
-const width = 3200;
+const width = 320;
 let height = 0;  // Computed based on the width
 
 video.addEventListener( 'canplay', ( event ) => {
