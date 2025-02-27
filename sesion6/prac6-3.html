@@ -1,31 +1,19 @@
+
 <!DOCTYPE html>
-
-
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio 3</title>
-    <link rel="stylesheet" type="text/css" href="./src/css/prac6-3.css">
-</head>
-<body>
-    <script type="module" defer src="dist/prac6-3.js">
-    <!-- Content of the page -->
-</script>
-<div id="container">
-<video id="localVideo" width="480"  height = "204" autoplay="true">   </video>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ejercicio 2</title>
 
-<video id="remoteVideo" width="480"  height = "204" autoplay="true"> </video>
+    <script src="dist/prac3-2.js" type="module"></script>
+  </head>
 
-</div>
-<div>
-
-    <button id="startButton"  > Iniciar </button>
-    <button id="callButton"  > LLamar  </button>
-    <button id="hangupButton"  > Colgar </button>
-
-</div>
-<canvas id="photo-canvas" style="display:none"></canvas>
-<canvas id="photo-canvas" style="display:none"></canvas> 
-</body>
+  <body>
+    
+    <video id="video" style="display:none" autoplay="true">
+      <source src="sintel_trailer-480p.mp4">
+      <source src="sintel_trailer-480p.ogv">
+  </video>
+  <canvas id="2d" width="0" height="0"></canvas>
+  </body>
 </html>
