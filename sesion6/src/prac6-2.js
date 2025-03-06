@@ -8,8 +8,6 @@ if ( !WEBGL.isWebGL2Available() ) {
     document.body.appendChild(nuevoDiv);
 }
 
-
-
 const video = document.querySelector( 'video' );
 const constraints = {
     audio: false,
@@ -17,7 +15,6 @@ const constraints = {
 };
 
 navigator.mediaDevices.getUserMedia( constraints )
-    // Called when we get the requested streams
     .then( ( stream ) => {
 
         // Video tracks (usually only one)
@@ -31,10 +28,8 @@ navigator.mediaDevices.getUserMedia( constraints )
             console.log( 'End of stream' );
         };
 
-        // Bind the stream to the html video element
         video.srcObject = stream;
 })
-    // Called in case of error
     .catch( ( error ) => {
 
         if ( error.name === 'ConstraintNotSatisfiedError' ) {
@@ -50,11 +45,11 @@ navigator.mediaDevices.getUserMedia( constraints )
 
 let streaming = false;
 const width = 320;
-let height = 0;  // Computed based on the width
+let height = 0;  
 
 video.addEventListener( 'canplay', ( event ) => {
 
-    if ( !streaming ) {  // To prevent re-entry
+    if ( !streaming ) {  
 
         height = video.videoHeight / ( video.videoWidth / width );
         video.width = width;
@@ -79,7 +74,6 @@ function takepicture( ) {
   canvas.height = height;
   canvas.getContext( '2d' ).drawImage( video, 0, 0, width, height );
 
-  // Start downloading (thanks to the 'download' attribute of the link)
   const dataURL = canvas.toDataURL( 'image/png' );
   captureButton.href = dataURL;
 }

@@ -8,8 +8,6 @@ if ( !WEBGL.isWebGL2Available() ) {
     document.body.appendChild(nuevoDiv);
 }
 
-
-
 const video = document.querySelector( 'video' );
 const constraints = {
     audio: false,
@@ -17,24 +15,20 @@ const constraints = {
 };
 
 navigator.mediaDevices.getUserMedia( constraints )
-    // Called when we get the requested streams
     .then( ( stream ) => {
 
-        // Video tracks (usually only one)
         const videoTracks = stream.getVideoTracks( );
         console.log( 'Stream characteristics: ', constraints );
         console.log( 'Using device: ' + videoTracks[0].label );
 
-        // End of stream handler
         stream.onended = () => {
 
             console.log( 'End of stream' );
         };
 
-        // Bind the stream to the html video element
         video.srcObject = stream;
 })
-    // Called in case of error
+
     .catch( ( error ) => {
 
         if ( error.name === 'ConstraintNotSatisfiedError' ) {

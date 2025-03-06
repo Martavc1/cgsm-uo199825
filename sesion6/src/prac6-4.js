@@ -32,10 +32,6 @@ const wall = new THREE.Mesh( new THREE.PlaneGeometry( image.width, image.height,
 wall.position.set( 0, 0, 0 );
 wall.rotation.set( Math.PI / 5, Math.PI / 5, 0 );
 
-//const light = new THREE.PointLight( 0xffffff, 10, 1000,0 );
-//light.position.set( 20, 100, 500 );
-//scene.add( light );
-
 scene.add(wall); 
 
 
@@ -64,24 +60,19 @@ const constraints = {
 };
 
 navigator.mediaDevices.getUserMedia( constraints )
-  // Called when we get the requested streams
   .then( ( stream ) => {
 
-      // Video tracks (usually only one)
       const videoTracks = stream.getVideoTracks( );
       console.log( 'Stream characteristics: ', constraints );
       console.log( 'Using device: ' + videoTracks[0].label );
 
-      // End of stream handler
       stream.onended = () => {
 
           console.log( 'End of stream' );
       };
 
-      // Bind the stream to the html video element
       video.srcObject = stream;
 })
-  // Called in case of error
   .catch( ( error ) => {
 
       if ( error.name === 'ConstraintNotSatisfiedError' ) {
@@ -97,11 +88,11 @@ navigator.mediaDevices.getUserMedia( constraints )
 
 let streaming = false;
 const width = 320;
-let height = 0;  // Computed based on the width
+let height = 0;  
 
 video.addEventListener( 'canplay', ( event ) => {
 
-  if ( !streaming ) {  // To prevent re-entry
+  if ( !streaming ) {  
 
       height = video.videoHeight / ( video.videoWidth / width );
       video.width = width;
@@ -112,5 +103,5 @@ video.addEventListener( 'canplay', ( event ) => {
   }
 }, false );
 
-const canvas = document.querySelector( 'canvas' );          // Select by element type
+const canvas = document.querySelector( 'canvas' );      
 
